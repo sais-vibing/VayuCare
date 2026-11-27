@@ -20,7 +20,7 @@ VayuCare combines deterministic environmental health engineering with structured
 - **Indian CPCB NAQI Breakpoints:** Computes the Indian National Air Quality Index (NAQI) directly from live PM2.5 and PM10 sub-indices using Central Pollution Control Board (CPCB) piecewise linear breakpoints (`Moderate`, `Poor`, `Severe`, `Hazardous`).
 - **Localized Smog Inversion & Vulnerability Modeling:** Pairs the city's pollution profile with household vulnerability tags (`Infants/Toddlers`, `Elderly`, `Asthma/Respiratory issues`, `Pets`), commute mode (`Car`, `Two-wheeler`, `Metro/Bus`, `Walk/Cycle`), home architecture (`Apartment`, `Independent House`), and filtration setup (`Yes (HEPA)`, `No Purifier`, `DIY Box-Fan`).
 - **Dynamic Exposure Math & Cross-Section Synchronization:** Computes effective personal AQI, daily inhaled PM2.5 avoided (µg/day), cigarette-smoke equivalence avoided, daily CO₂e prevented, and Eco-Impact Score dynamically—keeping **Section 04 (Direct Impact Insights)** and **Section 3 (What-If Impact Simulator)** synchronized in real time.
-- **Server-Side Gemini Structured Reasoning (`server.ts`):** Handles all `@google/genai` SDK calls on the Express backend (`/api/generate-plan` and `/api/ask-vayucare`) using `process.env.GEMINI_API_KEY` with a strict `responseSchema` so every plan pillar and interactive simulator habit is generated specifically for the user's profile with zero hardcoded mock fallbacks.
+- **Server-Side Gemini Structured Reasoning (`server/` + `server.ts`):** Handles all `@google/genai` SDK calls on the Express backend (`/api/generate-plan` and `/api/ask-vayucare`) using `process.env.GEMINI_API_KEY` with prompt-guided `responseMimeType: 'application/json'` and strict server-side item-level schema validation and sanitization so every plan pillar and interactive simulator habit is tailored specifically for the user's profile with zero hardcoded mock fallbacks.
 
 ---
 
@@ -30,9 +30,9 @@ VayuCare combines deterministic environmental health engineering with structured
    - Clicking a major Indian city chip or **Fetch Live AQI** resolves coordinates and fetches live PM2.5, PM10, and US AQI from Open-Meteo, converting them into Indian CPCB NAQI.
    - The AQI slider and category preset buttons remain fully editable so families can simulate "What-If" winter smog spikes manually.
 
-2. **4-Pillar Clean Air Plan Engine (`POST /api/generate-plan` in `server.ts`):**
+2. **4-Pillar Clean Air Plan Engine (`POST /api/generate-plan` in `server/app.ts` & `server/prompts.ts`):**
    - Invoked by the frontend via `src/services/geminiService.ts` and executed on the Express backend using `@google/genai` and `process.env.GEMINI_API_KEY`.
-   - Uses structured JSON output (`responseSchema`) to return:
+   - Uses prompt-guided `responseMimeType: 'application/json'` paired with server-side schema validation and numeric clamping to return:
      - **01. Low-Emission Daily Routine:** Time-blocked Morning, Afternoon, and Evening smog-inversion schedules with commute and vulnerability precautions.
      - **02. Indoor Air Quality Hacks:** Budget-friendly ventilation, HEPA/DIY box-fan filtration, wet-mopping vs. dry sweeping (`jhadu`), and kitchen `tadka` exhaust protocols.
      - **03. Sustainable Lifestyle Alternatives:** City-specific daily swaps (Metro/carpool shifts, RWA electric guard heaters, induction cooking).

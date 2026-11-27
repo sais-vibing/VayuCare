@@ -1,10 +1,13 @@
-import type { ChatMessage, CleanAirPlan, UserAirProfile } from '../types/vayucare';
+import type { ChatMessage, CleanAirPlan, UserAirProfile } from '../types/vayucare.ts';
 import {
   validateAndSanitizeAskRequest,
   validateAndSanitizePlanRequest,
-} from '../utils/securityValidation';
+} from '../utils/securityValidation.ts';
 
-async function parseApiJson<T>(response: Response, fallbackError: string): Promise<T> {
+/**
+ * Parses a JSON API response safely and throws a descriptive message on HTML or HTTP errors.
+ */
+export async function parseApiJson<T>(response: Response, fallbackError: string): Promise<T> {
   const contentType = response.headers.get('content-type') || '';
   if (!contentType.includes('application/json')) {
     throw new Error(fallbackError);
@@ -31,9 +34,7 @@ export async function generatePlan(profileInput: UserAirProfile): Promise<CleanA
   try {
     response = await fetch('/api/generate-plan', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(validation.data),
     });
   } catch {
@@ -50,7 +51,6 @@ export async function generatePlan(profileInput: UserAirProfile): Promise<CleanA
   if (!data.plan) {
     throw new Error('The server returned an empty Clean Air Action Plan. Please try again.');
   }
-
   return data.plan;
 }
 
@@ -63,13 +63,12 @@ export async function askVayuCare(
   historyInput: ChatMessage[],
   profileInput: UserAirProfile
 ): Promise<string> {
-  const payload = {
+  const validation = validateAndSanitizeAskRequest({
     question: questionInput,
     history: historyInput.map((m) => ({ role: m.role, content: m.content })),
     profile: profileInput,
-  };
+  });
 
-  const validation = validateAndSanitizeAskRequest(payload);
   if (!validation.valid || !validation.question) {
     throw new Error(
       validation.error || 'Please enter a valid question (up to 300 characters).'
@@ -80,9 +79,7 @@ export async function askVayuCare(
   try {
     response = await fetch('/api/ask-vayucare', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         question: validation.question,
         history: validation.history ?? [],
@@ -103,6 +100,5 @@ export async function askVayuCare(
   if (!data.answer) {
     throw new Error('The server returned an empty answer. Please try asking again.');
   }
-
   return data.answer;
 }

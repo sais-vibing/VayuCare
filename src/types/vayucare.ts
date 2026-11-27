@@ -1,17 +1,23 @@
+/** Indian CPCB NAQI severity categories supported by VayuCare. */
 export type AQIPresetCategory = 'Moderate' | 'Poor' | 'Severe' | 'Hazardous';
 
+/** Household respiratory vulnerability groups used to tailor precautions. */
 export type VulnerabilityTag =
   | 'Infants/Toddlers'
   | 'Elderly'
   | 'Asthma/Respiratory issues'
   | 'Pets';
 
+/** Primary daily commute modes modeled for exposure and emission swaps. */
 export type CommuteMode = 'Car' | 'Two-wheeler' | 'Metro/Bus' | 'Walk/Cycle';
 
+/** Residential building architectures supported for indoor air engineering. */
 export type HomeType = 'Apartment' | 'Independent House';
 
+/** Available household indoor air filtration configurations. */
 export type PurifierStatus = 'Yes' | 'No' | 'DIY';
 
+/** Real-time particulate and AQI telemetry fetched from Open-Meteo. */
 export interface LiveAqiTelemetry {
   city: string;
   latitude: number;
@@ -24,6 +30,7 @@ export interface LiveAqiTelemetry {
   source: 'open-meteo';
 }
 
+/** Complete household exposure profile sent to Gemini and simulator math. */
 export interface UserAirProfile {
   city: string;
   aqi: number;
@@ -35,6 +42,7 @@ export interface UserAirProfile {
   liveTelemetry?: LiveAqiTelemetry | null;
 }
 
+/** Single time-blocked daily routine segment (Morning, Afternoon, or Evening). */
 export interface TimeBlockRoutine {
   period: 'Morning' | 'Afternoon' | 'Evening';
   timeWindow: string;
@@ -44,6 +52,7 @@ export interface TimeBlockRoutine {
   vulnerableNote: string;
 }
 
+/** Practical indoor air quality engineering recommendation. */
 export interface IndoorAirHack {
   id: string;
   title: string;
@@ -53,6 +62,7 @@ export interface IndoorAirHack {
   steps: string[];
 }
 
+/** Localized low-emission lifestyle or commute swap recommendation. */
 export interface SustainableAlternative {
   id: string;
   title: string;
@@ -62,6 +72,7 @@ export interface SustainableAlternative {
   emissionSavingText: string;
 }
 
+/** Quantified health or environmental impact card synced with the simulator. */
 export interface DirectImpactInsight {
   metricLabel: string;
   quantifiedValue: string;
@@ -70,6 +81,7 @@ export interface DirectImpactInsight {
   category: 'Personal Health' | 'Community Environment';
 }
 
+/** Interactive toggleable habit for the What-If Impact Simulator. */
 export interface SimulatorHabit {
   id: string;
   label: string;
@@ -82,6 +94,7 @@ export interface SimulatorHabit {
   description: string;
 }
 
+/** Full 4-pillar Gemini Clean Air Action Plan and simulator habit dataset. */
 export interface CleanAirPlan {
   planTitle: string;
   cityContextSummary: string;
@@ -94,6 +107,7 @@ export interface CleanAirPlan {
   simulatorHabits: SimulatorHabit[];
 }
 
+/** Aggregated exposure reduction and eco-impact metrics for active habits. */
 export interface SimulatorMetrics {
   activeHabitCount: number;
   totalHabitCount: number;
@@ -105,6 +119,7 @@ export interface SimulatorMetrics {
   equivalentCigarettesAvoided: number;
 }
 
+/** Single message turn displayed in the Ask VayuCare chat feed. */
 export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
@@ -112,6 +127,7 @@ export interface ChatMessage {
   timestamp: string;
 }
 
+/** Preconfigured Indian household persona for one-click demos. */
 export interface QuickDemoPreset {
   id: string;
   label: string;

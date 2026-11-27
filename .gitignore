@@ -1,0 +1,14 @@
+node_modules/
+build/
+dist/
+.next/
+.vite/
+.cache/
+.playwright-cli/
+.aistudio/
+coverage/
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example
